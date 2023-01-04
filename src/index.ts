@@ -1,5 +1,19 @@
 import cron from 'node-cron';
+import logger from './logging/index.js';
+import NewsImport from './infrastructure/news-import.js';
 
-cron.schedule(`*/1 * * * *`, async () => {
-  console.log(`running your task...`);
+async function main() {
+  try {
+    logger.info('app started...');
+    const newsImport = new NewsImport();
+    await newsImport.start();
+    logger.info('app completed...');
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// cron job running every 2 hour
+cron.schedule('0 */5 * * *', function () {
+  main();
 });
